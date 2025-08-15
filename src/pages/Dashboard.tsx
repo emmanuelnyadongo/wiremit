@@ -10,6 +10,14 @@ import { Slider } from "@/components/ui/slider";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
+import { 
   LogOut, 
   Send, 
   TrendingUp, 
@@ -30,7 +38,7 @@ const fetchExchangeRates = async () => {
   return data;
 };
 
-// Mock transaction data
+// Mock transaction data - Extended to 20 transactions
 const mockTransactions = [
   { id: "1", date: "2024-01-15", amount: 500, currency: "GBP", fee: 12.50, status: "completed", recipient: "Sarah M." },
   { id: "2", date: "2024-01-12", amount: 300, currency: "ZAR", fee: 8.75, status: "completed", recipient: "James K." },
@@ -42,6 +50,16 @@ const mockTransactions = [
   { id: "8", date: "2023-12-28", amount: 350, currency: "ZAR", fee: 9.75, status: "completed", recipient: "Robert B." },
   { id: "9", date: "2023-12-25", amount: 800, currency: "GBP", fee: 20.00, status: "completed", recipient: "Lisa C." },
   { id: "10", date: "2023-12-22", amount: 250, currency: "ZAR", fee: 7.25, status: "completed", recipient: "John D." },
+  { id: "11", date: "2023-12-20", amount: 900, currency: "GBP", fee: 22.50, status: "completed", recipient: "Maria G." },
+  { id: "12", date: "2023-12-18", amount: 420, currency: "ZAR", fee: 12.60, status: "completed", recipient: "Peter S." },
+  { id: "13", date: "2023-12-15", amount: 650, currency: "GBP", fee: 16.25, status: "pending", recipient: "Anna K." },
+  { id: "14", date: "2023-12-12", amount: 380, currency: "ZAR", fee: 11.40, status: "completed", recipient: "Tom H." },
+  { id: "15", date: "2023-12-10", amount: 1200, currency: "GBP", fee: 30.00, status: "completed", recipient: "Rachel P." },
+  { id: "16", date: "2023-12-08", amount: 280, currency: "ZAR", fee: 8.40, status: "failed", recipient: "Kevin M." },
+  { id: "17", date: "2023-12-05", amount: 750, currency: "GBP", fee: 18.75, status: "completed", recipient: "Jennifer L." },
+  { id: "18", date: "2023-12-03", amount: 320, currency: "ZAR", fee: 9.60, status: "completed", recipient: "Daniel R." },
+  { id: "19", date: "2023-12-01", amount: 850, currency: "GBP", fee: 21.25, status: "completed", recipient: "Nicole T." },
+  { id: "20", date: "2023-11-28", amount: 480, currency: "ZAR", fee: 14.40, status: "completed", recipient: "Christopher B." },
 ];
 
 const Dashboard = () => {
@@ -49,6 +67,8 @@ const Dashboard = () => {
   const [sendAmount, setSendAmount] = useState([500]);
   const [currency, setCurrency] = useState("GBP");
   const [amountInput, setAmountInput] = useState("500");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [transactionsPerPage] = useState(6);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -118,6 +138,16 @@ const Dashboard = () => {
   const totalSentThisMonth = mockTransactions
     .filter(t => t.status === "completed" && new Date(t.date).getMonth() === new Date().getMonth())
     .reduce((sum, t) => sum + t.amount, 0);
+
+  // Pagination logic
+  const totalPages = Math.ceil(mockTransactions.length / transactionsPerPage);
+  const indexOfLastTransaction = currentPage * transactionsPerPage;
+  const indexOfFirstTransaction = indexOfLastTransaction - transactionsPerPage;
+  const currentTransactions = mockTransactions.slice(indexOfFirstTransaction, indexOfLastTransaction);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   if (!user) {
     return <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
@@ -321,8 +351,8 @@ const Dashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {mockTransactions.map((transaction) => (
+                <div className="space-y-3 mb-4">
+                  {currentTransactions.map((transaction) => (
                     <div key={transaction.id} className="flex items-center justify-between p-3 bg-background-secondary rounded-lg">
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
@@ -340,6 +370,48 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
+                
+                {/* Pagination */}
+                <Pagination className="justify-center">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) handlePageChange(currentPage - 1);
+                        }}
+                        className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                    
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(page);
+                          }}
+                          isActive={currentPage === page}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+                    
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) handlePageChange(currentPage + 1);
+                        }}
+                        className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
               </CardContent>
             </Card>
           </div>
