@@ -97,7 +97,7 @@
   }
 
   .glass-button {
-    @apply bg-glass-bg backdrop-blur-md border border-glass-border hover:bg-glass-bg/80 transition-all duration-300;
+    @apply bg-[var(--glass-bg)] backdrop-blur-md border border-[var(--glass-border)] hover:bg-[var(--glass-bg)]/80 transition-all duration-300;
   }
 
   .gradient-text {
