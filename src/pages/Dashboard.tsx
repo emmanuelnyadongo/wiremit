@@ -17,6 +17,13 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "@/components/ui/pagination";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { 
   LogOut, 
   Send, 
@@ -324,19 +331,43 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle>Special Offers</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 bg-gradient-gold rounded-lg text-accent-gold-foreground">
-                  <h3 className="font-bold mb-2">0% Fees Weekend!</h3>
-                  <p className="text-sm">Send money with zero transaction fees this weekend only.</p>
-                </div>
-                <div className="p-4 bg-gradient-success rounded-lg text-success-foreground">
-                  <h3 className="font-bold mb-2">Student Discounts</h3>
-                  <p className="text-sm">Special rates for education-related transfers.</p>
-                </div>
-                <div className="p-4 bg-gradient-primary rounded-lg border border-accent-gold/30">
-                  <h3 className="font-bold mb-2">Refer & Earn</h3>
-                  <p className="text-sm">Get $25 for every friend you refer to Wiremit.</p>
-                </div>
+              <CardContent>
+                <Carousel className="w-full">
+                  <CarouselContent>
+                    <CarouselItem>
+                      <div className="p-4 bg-gradient-gold rounded-lg text-accent-gold-foreground">
+                        <h3 className="font-bold mb-2">0% Fees Weekend!</h3>
+                        <p className="text-sm">Send money with zero transaction fees this weekend only.</p>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem>
+                      <div className="p-4 bg-gradient-success rounded-lg text-success-foreground">
+                        <h3 className="font-bold mb-2">Student Discounts</h3>
+                        <p className="text-sm">Special rates for education-related transfers.</p>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem>
+                      <div className="p-4 bg-gradient-primary rounded-lg border border-accent-gold/30">
+                        <h3 className="font-bold mb-2">Refer & Earn</h3>
+                        <p className="text-sm">Get $25 for every friend you refer to Wiremit.</p>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem>
+                      <div className="p-4 bg-gradient-warning rounded-lg text-warning-foreground">
+                        <h3 className="font-bold mb-2">Business Accounts</h3>
+                        <p className="text-sm">Bulk transfer discounts for businesses and organizations.</p>
+                      </div>
+                    </CarouselItem>
+                    <CarouselItem>
+                      <div className="p-4 bg-gradient-info rounded-lg text-info-foreground">
+                        <h3 className="font-bold mb-2">Mobile App</h3>
+                        <p className="text-sm">Download our app for faster transfers on the go.</p>
+                      </div>
+                    </CarouselItem>
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
               </CardContent>
             </Card>
           </div>
