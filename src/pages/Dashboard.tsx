@@ -120,13 +120,20 @@ const Dashboard = () => {
     return currency === "GBP" ? ratesData.GBP || 0.75 : ratesData.ZAR || 18.5;
   };
 
-  const calculateConversion = () => {
-    const rate = getExchangeRate();
-    return (sendAmount[0] * rate).toFixed(2);
+  const calculateFee = () => {
+    const amount = sendAmount[0];
+    let feeRate = 0.1; // Default to GBP
+    if (currency === "ZAR") feeRate = 0.2;
+    return Math.ceil(amount * feeRate).toFixed(2); // Round up
   };
 
-  const calculateFee = () => {
-    return (sendAmount[0] * 0.025).toFixed(2); // 2.5% fee
+  const calculateConversion = () => {
+    const rate = getExchangeRate();
+    const amount = sendAmount[0];
+    // Deduct fee first, then convert, round up
+    const fee = Math.ceil(amount * (currency === "GBP" ? 0.1 : 0.2));
+    const finalAmount = Math.ceil((amount - fee) * rate);
+    return finalAmount.toFixed(2);
   };
 
   const getStatusBadge = (status: string) => {
